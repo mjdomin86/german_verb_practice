@@ -54,3 +54,12 @@ A web application to help you practice German verbs with prepositions and their 
 - The backend uses PostgreSQL for data persistence.
 - Make sure PostgreSQL is running before starting the backend.
 - You can change database credentials in `application.properties` as needed.
+
+## TODO
+- User Authentication: Add login/register functionality
+- Different Practice Modes: Timed quizzes, difficulty levels
+- Import/Export: CSV import/export for verb lists
+- Mobile App: React Native version
+- Advanced Statistics: Progress charts, streak tracking
+- Spaced Repetition: Algorithm-based learning
+- Audio Pronunciation: Text-to-speech integration
