@@ -547,28 +547,6 @@ const VerbPractice = () => {
             )}
           </div>
         </div>
-
-        {/* Verb List */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-semibold mb-4">Current Verbs ({verbs.length})</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {verbs.map((verb, index) => (
-              <div key={verb.id} className="border border-gray-200 rounded-lg p-4 relative">
-                <button
-                  onClick={() => removeVerb(verb.id)}
-                  className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                  disabled={loading}
-                >
-                  <Trash2 size={16} />
-                </button>
-                <div className="font-semibold text-lg">{verb.verb}</div>
-                <div className="text-gray-600">+ {verb.preposition}</div>
-                <div className="text-gray-600">{verb.meaning}</div>
-                <div className="text-sm text-gray-500">{verb.grammaticalCase}</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
