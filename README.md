@@ -58,7 +58,7 @@ A web application to help you practice German verbs with prepositions and their 
 ## TODO
 - User Authentication: Add login/register functionality
 - Different Practice Modes: Timed quizzes, difficulty levels
-- Import/Export: CSV import/export for verb lists
+~~- Import/Export: CSV import/export for verb lists~~
 - Mobile App: React Native version
 - Advanced Statistics: Progress charts, streak tracking
 - Spaced Repetition: Algorithm-based learning
