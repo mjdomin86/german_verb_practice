@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, X, RotateCcw, Plus, Trash2, TrendingUp } from 'lucide-react';
+import { Check, X, RotateCcw, Plus, Trash2 } from 'lucide-react';
 import { verbService, practiceService } from '../services/api';
 
 const VerbPractice = () => {
@@ -12,7 +12,6 @@ const VerbPractice = () => {
   const [currentResult, setCurrentResult] = useState(null);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [showAddForm, setShowAddForm] = useState(false);
-  const [showStats, setShowStats] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [newVerb, setNewVerb] = useState({
@@ -20,10 +19,6 @@ const VerbPractice = () => {
     preposition: '',
     meaning: '',
     grammaticalCase: 'AKKUSATIV'
-  });
-  const [stats, setStats] = useState({
-    recentSessions: [],
-    averageScore: 0
   });
 
   // Predefined options
@@ -52,21 +47,6 @@ const VerbPractice = () => {
       console.error('Error loading verbs:', err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadStats = async () => {
-    try {
-      const [sessionsResponse, averageResponse] = await Promise.all([
-        practiceService.getRecentSessions(7),
-        practiceService.getAverageScore()
-      ]);
-      setStats({
-        recentSessions: sessionsResponse.data,
-        averageScore: averageResponse.data || 0
-      });
-    } catch (err) {
-      console.error('Error loading stats:', err);
     }
   };
 
@@ -173,13 +153,6 @@ const VerbPractice = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const toggleStats = () => {
-    if (!showStats) {
-      loadStats();
-    }
-    setShowStats(!showStats);
   };
 
   if (loading && verbs.length === 0) {
@@ -290,20 +263,6 @@ const VerbPractice = () => {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={toggleStats}
-                className="flex items-center gap-2 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors"
-              >
-                <TrendingUp size={16} />
-                Stats
-              </button>
-              <button
-                onClick={() => setShowAddForm(!showAddForm)}
-                className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-              >
-                <Plus size={16} />
-                Add Verb
-              </button>
-              <button
                 onClick={resetPractice}
                 className="flex items-center gap-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
               >
@@ -313,43 +272,6 @@ const VerbPractice = () => {
             </div>
           </div>
         </div>
-
-        {/* Stats Panel */}
-        {showStats && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h3 className="text-xl font-semibold mb-4">Statistics</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Average Score</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {Math.round(stats.averageScore * 100)}%
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Recent Sessions</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {stats.recentSessions.length}
-                </p>
-              </div>
-            </div>
-            {stats.recentSessions.length > 0 && (
-              <div className="mt-4">
-                <h4 className="font-semibold mb-2">Recent Practice Sessions</h4>
-                <div className="space-y-2">
-                  {stats.recentSessions.slice(0, 5).map((session, index) => (
-                    <div key={index} className="flex justify-between items-center text-sm">
-                      <span>{new Date(session.createdAt).toLocaleDateString()}</span>
-                      <span>
-                        {session.correctAnswers}/{session.totalQuestions} 
-                        ({Math.round((session.correctAnswers / session.totalQuestions) * 100)}%)
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Add New Verb Form */}
         {showAddForm && (

@@ -3,6 +3,7 @@ import VerbPractice from './components/VerbPractice';
 import Menu from './components/Menu';
 import ImportVerbs from './components/ImportVerbs';
 import VerbManagement from './components/VerbManagement';
+import PracticeStats from './components/PracticeStats';
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       {view === 'practice' && <VerbPractice />}
       {view === 'import' && <ImportVerbs />}
       {view === 'manage' && <VerbManagement />}
+      {view === 'stats' && <PracticeStats />}
     </div>
   );
 }

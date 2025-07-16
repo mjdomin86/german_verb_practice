@@ -20,6 +20,12 @@ const Menu = ({ currentView, setView }) => (
     >
       Import
     </button>
+    <button
+      className={`px-4 py-2 rounded ${currentView === 'stats' ? 'bg-blue-500 text-white' : 'bg-white text-blue-700'}`}
+      onClick={() => setView('stats')}
+    >
+      Statistics
+    </button>
   </nav>
 );
 
