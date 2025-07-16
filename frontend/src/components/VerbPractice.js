@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Check, X, RotateCcw, Plus, Trash2 } from 'lucide-react';
 import { verbService, practiceService } from '../services/api';
+import axios from 'axios';
 
 const VerbPractice = () => {
   const [verbs, setVerbs] = useState([]);
@@ -20,6 +21,7 @@ const VerbPractice = () => {
     meaning: '',
     grammaticalCase: 'AKKUSATIV'
   });
+  const [options, setOptions] = useState({ prepositions: [], meanings: [], cases: [] });
 
   // Predefined options
   const prepositions = ['an', 'auf', 'aus', 'bei', 'für', 'gegen', 'in', 'mit', 'nach', 'über', 'um', 'unter', 'von', 'vor', 'zu'];
@@ -36,6 +38,13 @@ const VerbPractice = () => {
     loadVerbs();
   }, []);
 
+  useEffect(() => {
+    if (verbs.length > 0) {
+      fetchOptions(verbs[currentVerbIndex]?.id);
+    }
+    // eslint-disable-next-line
+  }, [verbs, currentVerbIndex]);
+
   const loadVerbs = async () => {
     try {
       setLoading(true);
@@ -47,6 +56,15 @@ const VerbPractice = () => {
       console.error('Error loading verbs:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchOptions = async (verbId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/practice/options/${verbId}`);
+      setOptions(response.data);
+    } catch (err) {
+      setOptions({ prepositions: [], meanings: [], cases: [] });
     }
   };
 
@@ -359,17 +377,18 @@ const VerbPractice = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select Preposition
               </label>
-              <select
-                value={selectedPreposition}
-                onChange={(e) => setSelectedPreposition(e.target.value)}
-                disabled={showResult}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-              >
-                <option value="">Choose preposition</option>
-                {prepositions.map(prep => (
-                  <option key={prep} value={prep}>{prep}</option>
+              <div className="flex flex-wrap gap-2">
+                {options.prepositions.map((prep) => (
+                  <button
+                    key={prep}
+                    onClick={() => setSelectedPreposition(prep)}
+                    disabled={showResult}
+                    className={`px-3 py-2 rounded-lg border ${selectedPreposition === prep ? 'bg-blue-500 text-white' : 'bg-white text-blue-700'} ${showResult && currentResult && currentResult.correctAnswer.preposition === prep ? (currentResult.prepositionCorrect ? 'border-green-500' : 'border-red-500') : 'border-gray-300'}`}
+                  >
+                    {prep}
+                  </button>
                 ))}
-              </select>
+              </div>
               {showResult && currentResult && (
                 <div className="mt-2 flex items-center">
                   {currentResult.prepositionCorrect ? (
@@ -389,17 +408,18 @@ const VerbPractice = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select Meaning
               </label>
-              <select
-                value={selectedMeaning}
-                onChange={(e) => setSelectedMeaning(e.target.value)}
-                disabled={showResult}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-              >
-                <option value="">Choose meaning</option>
-                {meanings.map(meaning => (
-                  <option key={meaning} value={meaning}>{meaning}</option>
+              <div className="flex flex-wrap gap-2">
+                {options.meanings.map((meaning) => (
+                  <button
+                    key={meaning}
+                    onClick={() => setSelectedMeaning(meaning)}
+                    disabled={showResult}
+                    className={`px-3 py-2 rounded-lg border ${selectedMeaning === meaning ? 'bg-blue-500 text-white' : 'bg-white text-blue-700'} ${showResult && currentResult && currentResult.correctAnswer.meaning === meaning ? (currentResult.meaningCorrect ? 'border-green-500' : 'border-red-500') : 'border-gray-300'}`}
+                  >
+                    {meaning}
+                  </button>
                 ))}
-              </select>
+              </div>
               {showResult && currentResult && (
                 <div className="mt-2 flex items-center">
                   {currentResult.meaningCorrect ? (
@@ -419,17 +439,18 @@ const VerbPractice = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select Case
               </label>
-              <select
-                value={selectedCase}
-                onChange={(e) => setSelectedCase(e.target.value)}
-                disabled={showResult}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-              >
-                <option value="">Choose case</option>
-                {cases.map(case_option => (
-                  <option key={case_option} value={case_option}>{case_option}</option>
+              <div className="flex flex-wrap gap-2">
+                {options.cases.map((case_option) => (
+                  <button
+                    key={case_option}
+                    onClick={() => setSelectedCase(case_option)}
+                    disabled={showResult}
+                    className={`px-3 py-2 rounded-lg border ${selectedCase === case_option ? 'bg-blue-500 text-white' : 'bg-white text-blue-700'} ${showResult && currentResult && currentResult.correctAnswer.grammaticalCase === case_option ? (currentResult.caseCorrect ? 'border-green-500' : 'border-red-500') : 'border-gray-300'}`}
+                  >
+                    {case_option}
+                  </button>
                 ))}
-              </select>
+              </div>
               {showResult && currentResult && (
                 <div className="mt-2 flex items-center">
                   {currentResult.caseCorrect ? (
